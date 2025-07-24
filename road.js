@@ -11,6 +11,22 @@ class Road{
        this.top=-infinity;
          this.bottom=infinity;
 
+const topLeft={x:this.left, y:this.top};
+const bottomLeft={x:this.left, y:this.bottom};
+const topRight={x:this.right, y:this.top};
+const bottomRight={x:this.right, y:this.bottom};
+
+         //borders in array 
+         this.borders=[ 
+            [topLeft, bottomLeft],
+            [topRight, bottomRight]
+            ];
+
+    }
+    getLaneCenter(laneIndex){
+        const laneWidth=this.width/this.laneCount;
+        return this.left+laneWidth/2+Math.min(laneIndex, this.laneCount-1)*laneWidth; //to get the center of the lane als
+        //min for rightmost if laneIndex is greater than laneCount
     }
 
 draw(ctx){
@@ -18,24 +34,33 @@ draw(ctx){
     ctx.strokeStyle="white";
 
 
-    for(let i=0; i<=this.laneCount; i++){
+    for(let i=1; i<=this.laneCount-1; i++){
         //to avoid beign x same, we are gonna use linear interpolation
 const x=lerp(this.left, this.right, i/this.laneCount); //so from left to right, 3 sections
-        
-    ctx.beginPath();
+
+/*
+if(i>0 && i<this.laneCount){ //explain: we don't want to draw the lines at the very left and right edges
+   ctx.setLineDash([20,20]); //to make the lines dashed
+ }else{
+    ctx.setLineDash([]); //to make the lines solid
+ } 
+ */
+
+  ctx.setLineDash([20,20]); 
+  ctx.beginPath();
     ctx.moveTo(x, this.top);
     ctx.lineTo(x, this.bottom);
      ctx.stroke();
+       }
+//so now we seprated the lanes and now we want to draw the borders
 
-   
-}
-
+       ctx.setLineDash([]); 
+       this.borders.forEach(border=>{
+           ctx.beginPath();
+           ctx.moveTo(border[0].x, border[0].y);
+           ctx.lineTo(border[1].x, border[1].y);
+           ctx.stroke();
+       });
     }
 }
 
-//so like i want to go t percent on distance between a to b, lerp gives me the what that converted to distance is from a 
-
-function lerp(A,B,t){
-    return A+(B-A)*t;
-
-}
