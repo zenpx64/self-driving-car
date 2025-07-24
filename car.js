@@ -15,6 +15,12 @@ this.angle=0;
     }
 
     update(){
+        this.#move();
+}
+
+//hashtag becuaseee private heh
+#move(){
+    
         if(this.controls.forward) {
             this.speed += this.acceleration; 
         }
@@ -39,22 +45,28 @@ this.angle=0;
         this.speed=0; 
     }
 
-    if(this.controls.left){
-        this.angle+=0.03; //turn left
+    if(this.speed!=0 ){
+        const flip = this.speed>0? 1:-1; //to check if the car
+  
+        if(this.controls.left){
+        this.angle+=0.03*flip; //turn left
     }
 
   //  a 90 degree rotated circle is gpnna be our coordinate system
     if(this.controls.right){
-        this.angle-=0.03; //turn right
+        this.angle-=0.03*flip; //turn right
     }
+    //flip =1 will change nothing but when we go backwards , we want to flip the angle so it turns opposite 
+      }
 
     //if you just leave it to left and right, it breaks the law of physics because exceeds max speed 
     if(this.speed<0){
         this.speed+=this.friction;
     }
     
-
-    this.y-= this.speed; //to give the weee effect like yknow how when brakes are lifted, the car doesnt just halt
+    //up until this point we have just set the speed and angle of the car and now based on that update x and y 
+this.x-=Math.sin(this.angle)*this.speed; //to move in direction of angle like parallel instead of just car going down straight while tilted
+    this.y-=Math.cos(this.angle)*this.speed;
 }
     draw(ctx) {
         ctx.save();
@@ -63,9 +75,10 @@ this.angle=0;
         ctx.beginPath(); 
           
         ctx.rect(
-            this.x- this.width/2, 
-            this.y-this.height/2, this.width, this.height); //so the x of car is gonna be  inside the car in
+            - this.width/2, 
+            -this.height/2, this.width, this.height); //so the x of car is gonna be  inside the car in
    ctx.fill();
 
+   ctx.restore(); //to restore the context to its original state
     }
 }

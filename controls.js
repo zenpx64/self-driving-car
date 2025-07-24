@@ -27,16 +27,18 @@ class Controls{
                 case "ArrowDown":
                     this.reverse = true;
                     break;
-            }     console.table(this);
-        //now for key release
+            }  
         }
     
-        //debugging stuff 
+        
 
-   
-    
-    
+
+    //same as function(event) on key down call this function but if i write it like  this then it wont refer to this of the object above
+// here the 'this' refers to jo bhi element tha jis ne trigger kya the ye event and not the object we discussed above
        document.onkeyup=(event)=>{
+        // inside here, `this` refers to the object that defined the arrow function
+        //this is lexically bound so same as the 'this' where it was defined
+
             switch(event.key){
                 case "ArrowUp":
                     this.forward = false;
@@ -51,7 +53,7 @@ class Controls{
                     this.reverse = false;
                     break;
             }
-            console.table(this); //to see the changes in the console
+            //console.table(this); //to see the changes in the console
         }
     }
 }
